@@ -23,6 +23,12 @@ function Captcha(){
         ctx.fillStyle = "black";
         ctx.font = "36px captcha1";
         ctx.fillText(this.text, 140, 50);
+        ctx.beginPath();
+        for(var i=0; i<this.difficulty*2; ++i){
+            ctx.moveTo(Math.floor(Math.random() * 300), Math.floor(Math.random()* 150));
+            ctx.lineTo(Math.floor(Math.random() * 300), Math.floor(Math.random()* 150));
+            ctx.stroke();
+        }
     }
 }
 
@@ -57,17 +63,30 @@ var captchize = (function(){
         txt.onkeyup = function(e){
               if(e.which == 13){
                   if(this.value.toLowerCase() == captcha.text.toLowerCase()){
-                      alert("correct");
+                        document.getElementById('msg').innerHTML = "correct";    
+
                   }
                    else {
-                       alert("incorrect " + captcha.text);
+                       document.getElementById('msg').innerHTML = "incorrect";   
                    }
+                    setTimeout(function(){
+                        document.getElementById('msg').innerHTML = "";
+                      },1000);
                   captcha.refresh(canvas);
                   this.value = "";
               }
         };
+        var btn = document.createElement('button');
+        btn.onclick = function(){
+            captcha.refresh(canvas);
+        }
+        btn.innerHTML = "ReGenerate";
+        var msg = document.createElement('span');
+        msg.id = "msg";
         document.getElementById(obj.elem).appendChild(canvas);
         document.getElementById(obj.elem).appendChild(txt);
+        document.getElementById(obj.elem).appendChild(btn);
+        document.getElementById(obj.elem).appendChild(msg);
         captcha.generate();
         captcha.render(canvas);
     }
